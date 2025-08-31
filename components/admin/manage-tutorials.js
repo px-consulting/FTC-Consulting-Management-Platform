@@ -1,10 +1,7 @@
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import AddTutorialDialog from "./add-tutorial-dialog";
+import { toggleTutorial, deleteTutorial } from "@/lib/tutorials";
 
 function extractVideoId(url) {
   try {
@@ -15,80 +12,14 @@ function extractVideoId(url) {
   }
 }
 
-async function addTutorial(formData) {
-  "use server";
-  const name = formData.get("name");
-  const description = formData.get("description");
-  const youtubeUrl = formData.get("youtubeUrl");
-  await prisma.tutorial.create({ data: { name, description, youtubeUrl } });
-  revalidatePath("/admin");
-}
-
-async function toggleTutorial(id, active) {
-  "use server";
-  await prisma.tutorial.update({ where: { id }, data: { active } });
-  revalidatePath("/admin");
-}
-
-async function deleteTutorial(id) {
-  "use server";
-  await prisma.tutorial.delete({ where: { id } });
-  revalidatePath("/admin");
-}
-
 export default async function ManageTutorials() {
   const tutorials = await prisma.tutorial.findMany({ orderBy: { id: "desc" } });
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Add Tutorial</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>New Tutorial</DialogTitle>
-            </DialogHeader>
-            <form action={addTutorial} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="tut-name">
-                  Tutorial Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="tut-name"
-                  name="name"
-                  placeholder="Enter tutorial name"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tut-desc">
-                  Description <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="tut-desc"
-                  name="description"
-                  placeholder="Describe tutorial"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tut-url">
-                  YouTube Link <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="tut-url"
-                  name="youtubeUrl"
-                  placeholder="https://youtube.com/watch?v=..."
-                  required
-                />
-              </div>
-              <SubmitButton type="submit" pendingText="Saving...">Save</SubmitButton>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <AddTutorialDialog />
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 max-w-3xl mx-auto">
         {tutorials.map((t) => {
           const id = extractVideoId(t.youtubeUrl);
           return (
