@@ -6,10 +6,52 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Membership {
+  SILVER
+  GOLD
+  DIAMOND
+  PLATINUM
+}
+
+model User {
+  id            Int         @id @default(autoincrement())
+  name          String
+  email         String      @unique
+  password      String
+  passwordPlain String?
+  membership    Membership
+  startDate     DateTime
+  endDate       DateTime
+  imageUrl      String?
+  status        String      @default("CREATED")
+  lastLogin     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model LearningModule {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  fileUrl     String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tutorial {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  youtubeUrl  String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
