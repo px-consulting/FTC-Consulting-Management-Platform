@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
@@ -16,8 +17,15 @@ import { X } from "lucide-react";
 import { addModule } from "@/lib/learning-modules";
 
 export default function AddLearningModuleDialog() {
+  const [open, setOpen] = useState(false);
+
+  async function handleSubmit(formData) {
+    await addModule(formData);
+    setOpen(false);
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>Add Module</Button>
       </DialogTrigger>
@@ -33,7 +41,7 @@ export default function AddLearningModuleDialog() {
           </DialogClose>
         </DialogHeader>
         <form
-          action={addModule}
+          action={handleSubmit}
           className="space-y-4"
           encType="multipart/form-data"
         >
@@ -68,9 +76,9 @@ export default function AddLearningModuleDialog() {
               required
             />
           </div>
-          <DialogClose asChild>
-            <SubmitButton type="submit" pendingText="Saving...">Save</SubmitButton>
-          </DialogClose>
+          <SubmitButton type="submit" pendingText="Saving...">
+            Save
+          </SubmitButton>
         </form>
       </DialogContent>
     </Dialog>
