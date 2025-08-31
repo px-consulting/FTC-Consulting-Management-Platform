@@ -1,120 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { randomUUID } from "crypto";
-import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
-
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-
-async function addModule(formData) {
-  "use server";
-  const name = formData.get("name");
-  const description = formData.get("description");
-  const file = formData.get("file");
-  let fileUrl = "";
-  if (file && typeof file === "object") {
-    if (file.size > MAX_FILE_SIZE) {
-      throw new Error("File size exceeds 50MB limit");
-    }
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const fileName = `${randomUUID()}-${file.name}`;
-    const dir = join(process.cwd(), "public", "uploads");
-    await mkdir(dir, { recursive: true });
-    await writeFile(join(dir, fileName), buffer);
-    fileUrl = `/uploads/${fileName}`;
-  }
-  await prisma.learningModule.create({ data: { name, description, fileUrl } });
-  revalidatePath("/admin");
-}
-
-async function toggleModule(id, active) {
-  "use server";
-  await prisma.learningModule.update({ where: { id }, data: { active } });
-  revalidatePath("/admin");
-}
-
-async function deleteModule(id) {
-  "use server";
-  await prisma.learningModule.delete({ where: { id } });
-  revalidatePath("/admin");
-}
+import AddLearningModuleDialog from "./add-learning-module-dialog";
+import { toggleModule, deleteModule } from "@/lib/learning-modules";
 
 export default async function ManageLearnings() {
   const modules = await prisma.learningModule.findMany({ orderBy: { id: "desc" } });
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Add Module</Button>
-          </DialogTrigger>
-          <DialogContent
-            className="rounded-lg"
-            onInteractOutside={(e) => e.preventDefault()}
-          >
-            <DialogHeader className="flex flex-row items-center justify-between">
-              <DialogTitle>New Module</DialogTitle>
-              <DialogClose className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </DialogClose>
-            </DialogHeader>
-            <form
-              action={addModule}
-              className="space-y-4"
-              encType="multipart/form-data"
-            >
-              <div className="space-y-2">
-                <Label htmlFor="module-name">
-                  Module Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="module-name"
-                  name="name"
-                  placeholder="Enter module name"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="module-desc">Description</Label>
-                <Input
-                  id="module-desc"
-                  name="description"
-                  placeholder="Describe module"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="module-file">
-                  PDF (max 50MB) <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="module-file"
-                  name="file"
-                  type="file"
-                  accept="application/pdf"
-                  required
-                />
-              </div>
-              <DialogClose asChild>
-                <SubmitButton type="submit" pendingText="Saving...">Save</SubmitButton>
-              </DialogClose>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <AddLearningModuleDialog />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         {modules.map((m) => (
