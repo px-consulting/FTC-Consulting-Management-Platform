@@ -14,7 +14,8 @@ import { Eye, Download, Trash, X } from "lucide-react";
 import { toggleModule, deleteModule } from "@/lib/learning-modules";
 
 export default function LearningModuleCard({ module }) {
-  const { id, name, description, fileUrl, active } = module;
+  const { id, name, description, active } = module;
+  const fileUrl = `/api/modules/${id}/file`;
   return (
     <div className="flex items-start justify-between rounded border p-4">
       <div className="pr-4">
@@ -24,35 +25,31 @@ export default function LearningModuleCard({ module }) {
         )}
       </div>
       <div className="flex items-center gap-2">
-        {fileUrl && (
-          <>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" title="View">
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent
-                className="max-w-3xl rounded-lg"
-                onInteractOutside={(e) => e.preventDefault()}
-              >
-                <DialogHeader className="flex flex-row items-center justify-between">
-                  <DialogTitle>{name}</DialogTitle>
-                  <DialogClose className="cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-                    <X className="h-4 w-4" />
-                    <span className="sr-only">Close</span>
-                  </DialogClose>
-                </DialogHeader>
-                <iframe src={fileUrl} className="h-[75vh] w-full" />
-              </DialogContent>
-            </Dialog>
-            <a href={fileUrl} download target="_blank">
-              <Button variant="ghost" size="icon" title="Download">
-                <Download className="h-4 w-4" />
-              </Button>
-            </a>
-          </>
-        )}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" title="View">
+              <Eye className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            className="max-w-3xl rounded-lg"
+            onInteractOutside={(e) => e.preventDefault()}
+          >
+            <DialogHeader className="flex flex-row items-center justify-between">
+              <DialogTitle>{name}</DialogTitle>
+              <DialogClose className="cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </DialogClose>
+            </DialogHeader>
+            <iframe src={fileUrl} className="h-[75vh] w-full" />
+          </DialogContent>
+        </Dialog>
+        <a href={fileUrl} download target="_blank">
+          <Button variant="ghost" size="icon" title="Download">
+            <Download className="h-4 w-4" />
+          </Button>
+        </a>
         <form action={toggleModule.bind(null, id, !active)}>
           <SubmitButton
             type="submit"
