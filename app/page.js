@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -11,14 +11,20 @@ import { loginAdmin, loginUser } from "./actions";
 const initialState = { errors: {} };
 
 export default function Home() {
-  const [userState, userAction] = useFormState(loginUser, initialState);
-  const [adminState, adminAction] = useFormState(loginAdmin, initialState);
+  const [userState, userAction, userPending] = useActionState(
+    loginUser,
+    initialState
+  );
+  const [adminState, adminAction, adminPending] = useActionState(
+    loginAdmin,
+    initialState
+  );
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-6">
       <h1 className="text-2xl font-bold">FTC Consulting Management Platform</h1>
       <Card className="w-full max-w-md">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent>
@@ -63,7 +69,9 @@ export default function Home() {
                   <p className="text-sm text-center text-red-500">{userState.errors.general}</p>
                 )}
                 <div className="flex justify-center">
-                  <Button type="submit">Login</Button>
+                  <Button type="submit" disabled={userPending}>
+                    {userPending ? "Loading..." : "Login"}
+                  </Button>
                 </div>
               </form>
             </TabsContent>
@@ -103,7 +111,9 @@ export default function Home() {
                   <p className="text-sm text-center text-red-500">{adminState.errors.general}</p>
                 )}
                 <div className="flex justify-center">
-                  <Button type="submit">Login</Button>
+                  <Button type="submit" disabled={adminPending}>
+                    {adminPending ? "Loading..." : "Login"}
+                  </Button>
                 </div>
               </form>
             </TabsContent>
