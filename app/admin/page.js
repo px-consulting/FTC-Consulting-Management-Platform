@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import ManageLearnings from "@/components/admin/manage-learnings";
 import ManageTutorials from "@/components/admin/manage-tutorials";
 import ManageUsers from "@/components/admin/manage-users";
@@ -21,9 +21,9 @@ export default async function AdminPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Welcome Admin!</h1>
         <form action={logout}>
-          <Button type="submit" variant="secondary">
+          <SubmitButton type="submit" variant="secondary" pendingText="Logging out...">
             Logout
-          </Button>
+          </SubmitButton>
         </form>
       </div>
       <Tabs defaultValue="learnings" className="w-full">

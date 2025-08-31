@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,18 +51,39 @@ export default async function ManageTutorials() {
             </DialogHeader>
             <form action={addTutorial} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="tut-name">Tutorial Name</Label>
-                <Input id="tut-name" name="name" required />
+                <Label htmlFor="tut-name">
+                  Tutorial Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="tut-name"
+                  name="name"
+                  placeholder="Enter tutorial name"
+                  required
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="tut-desc">Description</Label>
-                <Input id="tut-desc" name="description" required />
+                <Label htmlFor="tut-desc">
+                  Description <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="tut-desc"
+                  name="description"
+                  placeholder="Describe tutorial"
+                  required
+                />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="tut-url">YouTube Link</Label>
-                <Input id="tut-url" name="youtubeUrl" required />
+                <Label htmlFor="tut-url">
+                  YouTube Link <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="tut-url"
+                  name="youtubeUrl"
+                  placeholder="https://youtube.com/watch?v=..."
+                  required
+                />
               </div>
-              <Button type="submit">Save</Button>
+              <SubmitButton type="submit" pendingText="Saving...">Save</SubmitButton>
             </form>
           </DialogContent>
         </Dialog>
@@ -74,13 +96,15 @@ export default async function ManageTutorials() {
               <div className="flex items-center justify-between">
                 <h3 className="font-medium">{t.name}</h3>
                 <div className="flex gap-2">
-                  <form action={async () => toggleTutorial(t.id, !t.active)}>
-                    <Button type="submit" variant="secondary">
+                  <form action={toggleTutorial.bind(null, t.id, !t.active)}>
+                    <SubmitButton type="submit" variant="secondary" pendingText="Updating...">
                       {t.active ? "Deactivate" : "Activate"}
-                    </Button>
+                    </SubmitButton>
                   </form>
-                  <form action={async () => deleteTutorial(t.id)}>
-                    <Button type="submit" variant="ghost">Delete</Button>
+                  <form action={deleteTutorial.bind(null, t.id)}>
+                    <SubmitButton type="submit" variant="ghost" pendingText="Deleting...">
+                      Delete
+                    </SubmitButton>
                   </form>
                 </div>
               </div>
