@@ -24,7 +24,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-6">
       <h1 className="text-2xl font-bold">FTC Consulting Management Platform</h1>
       <Card className="w-full max-w-md">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>
         </CardHeader>
         <CardContent>
