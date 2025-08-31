@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
 async function addModule(formData) {
   "use server";
   const name = formData.get("name");
@@ -24,6 +26,9 @@ async function addModule(formData) {
   const file = formData.get("file");
   let fileUrl = "";
   if (file && typeof file === "object") {
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("File size exceeds 50MB limit");
+    }
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const fileName = `${randomUUID()}-${file.name}`;
@@ -94,9 +99,15 @@ export default async function ManageLearnings() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="module-file">
-                  PDF <span className="text-red-500">*</span>
+                  PDF (max 50MB) <span className="text-red-500">*</span>
                 </Label>
-                <Input id="module-file" name="file" type="file" accept="application/pdf" required />
+                <Input
+                  id="module-file"
+                  name="file"
+                  type="file"
+                  accept="application/pdf"
+                  required
+                />
               </div>
               <DialogClose asChild>
                 <SubmitButton type="submit" pendingText="Saving...">Save</SubmitButton>
