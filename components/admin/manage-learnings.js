@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,17 +15,7 @@ async function addModule(formData) {
   "use server";
   const name = formData.get("name");
   const description = formData.get("description");
-  const file = formData.get("file");
-  let fileUrl = "";
-  if (file && typeof file.name === "string") {
-    const { data, error } = await supabase.storage
-      .from("learnings")
-      .upload(`learnings/${Date.now()}-${file.name}`, file, { upsert: false });
-    if (!error) {
-      fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.path}`;
-    }
-  }
-  await prisma.learningModule.create({ data: { name, description, fileUrl } });
+  await prisma.learningModule.create({ data: { name, description, fileUrl: "" } });
   revalidatePath("/admin");
 }
 
@@ -64,10 +53,6 @@ export default async function ManageLearnings() {
                 <Label htmlFor="module-desc">Description</Label>
                 <Input id="module-desc" name="description" required />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="module-file">Upload PDF</Label>
-                <Input id="module-file" name="file" type="file" accept="application/pdf" required />
-              </div>
               <Button type="submit">Save</Button>
             </form>
           </DialogContent>
@@ -79,14 +64,6 @@ export default async function ManageLearnings() {
             <div className="flex items-center justify-between">
               <h3 className="font-medium">{m.name}</h3>
               <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="outline">View</Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl h-[80vh]">
-                    <iframe src={m.fileUrl} className="h-full w-full" />
-                  </DialogContent>
-                </Dialog>
                 <form action={async () => toggleModule(m.id, !m.active)}>
                   <Button type="submit" variant="secondary">
                     {m.active ? "Deactivate" : "Activate"}

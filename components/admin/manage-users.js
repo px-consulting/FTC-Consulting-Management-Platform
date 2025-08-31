@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { supabase } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
@@ -19,18 +18,8 @@ async function addUser(formData) {
   const membership = formData.get("membership");
   const startDate = new Date(formData.get("startDate"));
   const endDate = new Date(formData.get("endDate"));
-  const image = formData.get("image");
   const plainPassword = generatePassword();
   const hashed = await bcrypt.hash(plainPassword, 10);
-  let imageUrl = "";
-  if (image && typeof image.name === "string") {
-    const { data, error } = await supabase.storage
-      .from("avatars")
-      .upload(`avatars/${Date.now()}-${image.name}`, image, { upsert: false });
-    if (!error) {
-      imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.path}`;
-    }
-  }
   await prisma.user.create({
     data: {
       name,
@@ -38,7 +27,6 @@ async function addUser(formData) {
       membership,
       startDate,
       endDate,
-      imageUrl,
       password: hashed,
       passwordPlain: plainPassword,
     },
@@ -98,10 +86,6 @@ export default async function ManageUsers() {
                   <Label htmlFor="endDate">End Date</Label>
                   <Input id="endDate" name="endDate" type="date" required />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="user-image">Upload User Image</Label>
-                <Input id="user-image" name="image" type="file" accept="image/*" />
               </div>
               <Button type="submit">Save</Button>
             </form>
