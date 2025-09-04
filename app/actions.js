@@ -53,6 +53,10 @@ export async function loginUser(prevState, formData) {
   if (!user) return { errors: { general: "Invalid credentials" }, success: false };
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return { errors: { general: "Invalid credentials" }, success: false };
+  const today = new Date();
+  if (user.status !== "ACTIVE" || user.endDate < today) {
+    return { errors: { general: "Membership Expired" }, success: false };
+  }
   cookies().set("userId", String(user.id), { path: "/" });
   await prisma.user.update({
     where: { id: user.id },
