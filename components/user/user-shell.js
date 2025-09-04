@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import TutorialCard from "./tutorial-card";
 import {
   Dialog,
   DialogTrigger,
@@ -14,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Eye, Download, Menu, X } from "lucide-react";
 
-export default function UserShell({ user, modules, tutorials }) {
+export default function UserShell({ user, modules, tutorials, logout }) {
   const [view, setView] = useState("modules");
   return (
     <div className="p-4 space-y-4">
@@ -37,7 +38,7 @@ export default function UserShell({ user, modules, tutorials }) {
                 </SheetClose>
                 <SheetClose asChild>
                   <button onClick={() => setView("tutorials")} className="text-left font-medium">
-                    Training Videos
+                    Tutorials
                   </button>
                 </SheetClose>
               </nav>
@@ -82,12 +83,17 @@ export default function UserShell({ user, modules, tutorials }) {
               </div>
             </DialogContent>
           </Dialog>
+          <form action={logout}>
+            <Button type="submit" variant="destructive">
+              Logout
+            </Button>
+          </form>
         </div>
       </div>
       <Tabs value={view} onValueChange={setView} className="hidden sm:block">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="modules">Learning Modules</TabsTrigger>
-          <TabsTrigger value="tutorials">Training Videos</TabsTrigger>
+          <TabsTrigger value="tutorials">Tutorials</TabsTrigger>
         </TabsList>
       </Tabs>
       <div>
@@ -132,22 +138,14 @@ export default function UserShell({ user, modules, tutorials }) {
         )}
         {view === "tutorials" && (
           <div className="space-y-4">
-            {tutorials.map((t) => (
-              <div key={t.id} className="space-y-2 rounded border p-4">
-                <h3 className="font-medium">{t.name}</h3>
-                {t.description && (
-                  <p className="text-sm text-muted-foreground">{t.description}</p>
-                )}
-                <div className="aspect-video w-full">
-                  <iframe
-                    src={t.youtubeUrl}
-                    className="h-full w-full"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-            ))}
-            {tutorials.length === 0 && <p>No tutorials available.</p>}
+            <ol className="space-y-6 max-w-3xl mx-auto">
+              {tutorials.map((t, i) => (
+                <li key={t.id}>
+                  <TutorialCard tutorial={t} step={i + 1} />
+                </li>
+              ))}
+              {tutorials.length === 0 && <p>No tutorials available.</p>}
+            </ol>
           </div>
         )}
       </div>
