@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
@@ -10,12 +12,27 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Eye, Download, Trash, X } from "lucide-react";
 import { toggleModule, deleteModule } from "@/lib/learning-modules";
 
 export default function LearningModuleCard({ module }) {
   const { id, name, description, active } = module;
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const fileUrl = `/api/modules/${id}/file`;
+
+  async function handleToggle() {
+    try {
+      await toggleModule(id, !active);
+      toast.success(`Module ${active ? "deactivated" : "activated"}`);
+    } catch (err) {
+      toast.error("Failed to update module");
+    } finally {
+      setConfirmOpen(false);
+    }
+  }
+
   return (
     <div className="flex items-start justify-between rounded border p-4">
       <div className="pr-4">
@@ -25,6 +42,14 @@ export default function LearningModuleCard({ module }) {
         )}
       </div>
       <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Switch
+            id={`module-${id}`}
+            checked={active}
+            onCheckedChange={() => setConfirmOpen(true)}
+          />
+          <Label htmlFor={`module-${id}`}>{active ? "Active" : "Inactive"}</Label>
+        </div>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="ghost" size="icon" title="View">
@@ -50,17 +75,28 @@ export default function LearningModuleCard({ module }) {
             <Download className="h-4 w-4" />
           </Button>
         </a>
-        <form action={toggleModule.bind(null, id, !active)}>
-          <SubmitButton
-            type="submit"
-            variant="secondary"
-            pendingText="Updating..."
-          >
-            {active ? "Deactivate" : "Activate"}
-          </SubmitButton>
-        </form>
         <DeleteModuleButton id={id} />
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="rounded-lg" onInteractOutside={(e) => e.preventDefault()}>
+          <DialogHeader>
+            <DialogTitle>
+              {active ? "Deactivate module?" : "Activate module?"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-end gap-2">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button onClick={handleToggle}>
+              Confirm
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

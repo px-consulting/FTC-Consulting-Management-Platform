@@ -51,7 +51,7 @@ export default function AdminShell({ logout, learnings, tutorials, users }) {
             </SheetContent>
           </Sheet>
           <form action={logout}>
-            <Button type="submit" variant="secondary">
+            <Button type="submit" variant="destructive">
               Logout
             </Button>
           </form>

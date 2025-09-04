@@ -21,6 +21,10 @@ export default {
           foreground: '#ffffff',
         },
         teal: '#14b8a6',
+        destructive: {
+          DEFAULT: '#ef4444',
+          foreground: '#ffffff',
+        },
         background: 'var(--background)',
         foreground: 'var(--foreground)',
       },
