@@ -67,7 +67,7 @@ Gradients: brand hero backgrounds use a linear gradient from `#0B5CAB` → `#0EA
 - **Cards** – used for PDF/tutorial entries.
 - **Modal Dialogs** – upload module/tutorial/user; use `dialog` shadcn component.
 - **Table** – user management with status `Badge` and key icon for credentials.
-- **Badges** – `created`, `active`, `inactive` variants.
+- **Badges** – `active`, `inactive`, `expired` variants.
 - **Form Controls** – inputs, selects, date pickers, file upload button.
 - **YouTubePlayer** – embedded video with thumbnail preview.
 

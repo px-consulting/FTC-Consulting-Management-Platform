@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import YouTubePlayer from "@/components/ui/youtube-player";
 import { toggleTutorial, deleteTutorial } from "@/lib/tutorials";
+import { Trash } from "lucide-react";
 
 export default function TutorialCard({ tutorial, step }) {
   const { id, name, description, youtubeUrl, active } = tutorial;
@@ -50,14 +51,21 @@ export default function TutorialCard({ tutorial, step }) {
             <Label htmlFor={`tutorial-${id}`}>{active ? "Active" : "Inactive"}</Label>
           </div>
           <form action={deleteTutorial.bind(null, id)}>
-            <SubmitButton type="submit" variant="ghost" pendingText="Deleting...">
-              Delete
+            <SubmitButton
+              type="submit"
+              variant="ghost"
+              size="icon"
+              className="text-destructive"
+              pendingText="Deleting..."
+            >
+              <Trash className="h-4 w-4" />
+              <span className="sr-only">Delete</span>
             </SubmitButton>
           </form>
         </div>
       </CardHeader>
       <YouTubePlayer videoId={videoId} />
-      <CardContent>
+      <CardContent className="pt-4">
         <p className="text-sm text-muted-foreground">{description}</p>
       </CardContent>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>

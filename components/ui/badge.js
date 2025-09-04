@@ -3,12 +3,12 @@
 import { cn } from "@/lib/utils";
 
 const variants = {
-  created: "bg-primary text-primary-foreground",
   active: "bg-teal text-white",
+  inactive: "bg-destructive/10 text-destructive",
   expired: "bg-destructive/10 text-destructive",
 };
 
-export function Badge({ variant = "created", className, ...props }) {
+export function Badge({ variant = "active", className, ...props }) {
   return (
     <span
       className={cn(

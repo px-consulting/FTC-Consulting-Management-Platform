@@ -52,7 +52,7 @@ export default function LearningModuleCard({ module }) {
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="icon" title="View">
+        <Button variant="ghost" size="icon" title="View">
               <Eye className="h-4 w-4" />
             </Button>
           </DialogTrigger>
@@ -105,7 +105,12 @@ function DeleteModuleButton({ id }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" title="Delete">
+        <Button
+          variant="ghost"
+          size="icon"
+          title="Delete"
+          className="text-destructive"
+        >
           <Trash className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -125,7 +130,13 @@ function DeleteModuleButton({ id }) {
               Cancel
             </Button>
           </DialogClose>
-          <SubmitButton type="submit" pendingText="Deleting...">
+          <SubmitButton
+            type="submit"
+            variant="destructive"
+            className="flex items-center gap-2"
+            pendingText="Deleting..."
+          >
+            <Trash className="h-4 w-4" />
             Delete
           </SubmitButton>
         </form>
