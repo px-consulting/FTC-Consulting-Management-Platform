@@ -62,9 +62,9 @@ export default function Home() {
       <Image
         src="/pxc-logo.png"
         alt="PXC Logo"
-        width={80}
-        height={80}
-        className="mb-2"
+        width={120}
+        height={120}
+        className="mb-4"
       />
       <h1 className="text-2xl font-heading font-bold">FTC Consulting Management Platform</h1>
       <Card className="w-full max-w-md">

@@ -28,6 +28,7 @@ export function DatePicker({ name }) {
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
+            mode="single"
             selected={date}
             onSelect={(d) => {
               setDate(d);
