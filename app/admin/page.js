@@ -19,7 +19,7 @@ export default async function AdminPage() {
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Welcome Admin!</h1>
+        <h1 className="text-2xl font-heading font-bold">Welcome Admin!</h1>
         <form action={logout}>
           <SubmitButton type="submit" variant="secondary" pendingText="Logging out...">
             Logout
