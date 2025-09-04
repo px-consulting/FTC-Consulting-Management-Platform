@@ -66,7 +66,9 @@ export default function Home() {
         height={200}
         className="mb-4"
       />
-      <h1 className="text-2xl font-heading font-bold">FTC Consulting Management Platform</h1>
+      <h1 className="text-xl text-center sm:text-2xl font-heading font-bold">
+        FTC Consulting Management Platform
+      </h1>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>Login</CardTitle>

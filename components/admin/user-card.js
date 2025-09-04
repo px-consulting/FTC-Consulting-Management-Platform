@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -36,6 +36,24 @@ export default function UserCard({ user }) {
   const isActive = status === "ACTIVE";
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [credOpen, setCredOpen] = useState(false);
+  const initialCredState = { success: false };
+  async function handleUpdate(prevState, formData) {
+    await updateCredentials(id, formData);
+    return { success: true };
+  }
+  const [credState, credAction] = useActionState(
+    handleUpdate,
+    initialCredState
+  );
+
+  useEffect(() => {
+    if (credState.success) {
+      setEditing(false);
+      setCredOpen(false);
+      toast.success(`Credentials for ${name} updated`);
+    }
+  }, [credState.success, name]);
 
   async function handleToggle() {
     try {
@@ -71,7 +89,13 @@ export default function UserCard({ user }) {
               {status === "ACTIVE" ? "Active" : status === "EXPIRED" ? "Expired" : "Inactive"}
             </Label>
           </div>
-          <Dialog>
+          <Dialog
+            open={credOpen}
+            onOpenChange={(o) => {
+              setCredOpen(o);
+              if (!o) setEditing(false);
+            }}
+          >
             <DialogTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Key className="h-4 w-4" />
@@ -86,7 +110,7 @@ export default function UserCard({ user }) {
                 </DialogClose>
               </DialogHeader>
               {editing ? (
-                <form action={updateCredentials.bind(null, id)} className="space-y-4">
+                <form action={credAction} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor={`email-${id}`}>Email</Label>
                     <Input
