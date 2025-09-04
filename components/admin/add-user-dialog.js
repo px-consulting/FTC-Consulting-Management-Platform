@@ -59,6 +59,18 @@ export default function AddUserDialog() {
             <Input id="user-email" name="email" type="email" placeholder="Enter email" required />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="user-phone">
+              Phone Number <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="user-phone"
+              name="phone"
+              type="tel"
+              placeholder="Enter phone number"
+              required
+            />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="user-membership">
               Membership Taken <span className="text-red-500">*</span>
             </Label>
