@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
@@ -20,8 +21,13 @@ export default function AddLearningModuleDialog() {
   const [open, setOpen] = useState(false);
 
   async function handleSubmit(formData) {
-    await addModule(formData);
-    setOpen(false);
+    try {
+      await addModule(formData);
+      toast.success("Module created");
+      setOpen(false);
+    } catch (err) {
+      toast.error(err.message || "Failed to create module");
+    }
   }
 
   return (

@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 
 export function DatePicker({ name }) {
   const [date, setDate] = React.useState();
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="grid gap-2">
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -26,7 +27,14 @@ export function DatePicker({ name }) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar selected={date} onSelect={setDate} initialFocus />
+          <Calendar
+            selected={date}
+            onSelect={(d) => {
+              setDate(d);
+              setOpen(false);
+            }}
+            initialFocus
+          />
         </PopoverContent>
       </Popover>
       <input type="hidden" name={name} value={date ? date.toISOString() : ""} />

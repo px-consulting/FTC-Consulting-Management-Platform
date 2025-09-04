@@ -1,6 +1,9 @@
-'use client';
+"use client";
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -8,9 +11,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { loginAdmin, loginUser } from "./actions";
 
-const initialState = { errors: {} };
+const initialState = { errors: {}, success: false };
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [userState, userAction, userPending] = useActionState(
     loginUser,
     initialState
@@ -20,8 +25,47 @@ export default function Home() {
     initialState
   );
 
+  useEffect(() => {
+    if (searchParams.get("logout") === "1") {
+      toast.success("Logged out successfully");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (userState.errors.general) {
+      toast.error(userState.errors.general);
+    }
+  }, [userState.errors]);
+
+  useEffect(() => {
+    if (adminState.errors.general) {
+      toast.error(adminState.errors.general);
+    }
+  }, [adminState.errors]);
+
+  useEffect(() => {
+    if (userState.success) {
+      toast.success("Login successful");
+      router.push("/user");
+    }
+  }, [userState.success, router]);
+
+  useEffect(() => {
+    if (adminState.success) {
+      toast.success("Login successful");
+      router.push("/admin");
+    }
+  }, [adminState.success, router]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4 space-y-6">
+      <Image
+        src="/pxc-logo.png"
+        alt="PXC Logo"
+        width={80}
+        height={80}
+        className="mb-2"
+      />
       <h1 className="text-2xl font-bold">FTC Consulting Management Platform</h1>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">

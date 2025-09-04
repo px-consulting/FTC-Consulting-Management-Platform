@@ -26,23 +26,25 @@ const SelectTrigger = React.forwardRef(({ className, ...props }, ref) => (
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-const SelectContent = React.forwardRef(({ className, ...props }, ref) => (
-  <SelectPrimitive.Content
-    ref={ref}
-    className={cn(
-      "z-50 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
-      className
-    )}
-    {...props}
-  >
-    <SelectPrimitive.Viewport className="p-1" />
-    <SelectPrimitive.ScrollUpButton className="flex items-center justify-center h-6 bg-popover text-popover-foreground cursor-default">
-      <ChevronUp className="h-4 w-4" />
-    </SelectPrimitive.ScrollUpButton>
-    <SelectPrimitive.ScrollDownButton className="flex items-center justify-center h-6 bg-popover text-popover-foreground cursor-default">
-      <ChevronDown className="h-4 w-4" />
-    </SelectPrimitive.ScrollDownButton>
-  </SelectPrimitive.Content>
+const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={cn(
+        "z-50 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
+        className
+      )}
+      {...props}
+    >
+      <SelectPrimitive.ScrollUpButton className="flex items-center justify-center h-6 bg-popover text-popover-foreground cursor-default">
+        <ChevronUp className="h-4 w-4" />
+      </SelectPrimitive.ScrollUpButton>
+      <SelectPrimitive.Viewport className="p-1">{children}</SelectPrimitive.Viewport>
+      <SelectPrimitive.ScrollDownButton className="flex items-center justify-center h-6 bg-popover text-popover-foreground cursor-default">
+        <ChevronDown className="h-4 w-4" />
+      </SelectPrimitive.ScrollDownButton>
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
 ));
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 

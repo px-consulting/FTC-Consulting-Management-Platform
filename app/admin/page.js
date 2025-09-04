@@ -13,7 +13,7 @@ export default async function AdminPage() {
   async function logout() {
     "use server";
     cookies().delete("admin");
-    redirect("/");
+    redirect("/?logout=1");
   }
 
   return (
