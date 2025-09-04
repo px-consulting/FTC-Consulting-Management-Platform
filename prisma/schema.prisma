@@ -32,6 +32,9 @@ model User {
   endDate       DateTime
   phone         String?
   imageUrl      String?
+  businessName  String?
+  companyAddress String?
+  employeeCount Int?
   status        String      @default("CREATED")
   lastLogin     DateTime?
   createdAt     DateTime    @default(now())
