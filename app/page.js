@@ -1,11 +1,21 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { Suspense, useActionState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -13,7 +23,7 @@ import { loginAdmin, loginUser } from "./actions";
 
 const initialState = { errors: {}, success: false };
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [userState, userAction, userPending] = useActionState(
@@ -169,6 +179,14 @@ export default function Home() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }
 
