@@ -27,7 +27,17 @@ export default async function UserPage() {
     startDate: user.startDate.toISOString().split("T")[0],
     endDate: user.endDate.toISOString().split("T")[0],
   };
+  async function logout() {
+    "use server";
+    cookies().delete("userId");
+    redirect("/?logout=1");
+  }
   return (
-    <UserShell user={formattedUser} modules={modules} tutorials={tutorials} />
+    <UserShell
+      user={formattedUser}
+      modules={modules}
+      tutorials={tutorials}
+      logout={logout}
+    />
   );
 }
