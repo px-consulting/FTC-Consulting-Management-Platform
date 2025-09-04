@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import {
@@ -22,8 +23,13 @@ export default function AddUserDialog() {
   const [open, setOpen] = useState(false);
 
   async function handleSubmit(formData) {
-    await addUser(formData);
-    setOpen(false);
+    try {
+      await addUser(formData);
+      toast.success("User created");
+      setOpen(false);
+    } catch (err) {
+      toast.error(err.message || "Failed to create user");
+    }
   }
 
   return (
