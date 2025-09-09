@@ -31,10 +31,23 @@ export default function UserCard({ user }) {
     endDate,
     status: rawStatus,
     passwordPlain,
+    businessName,
+    companyAddress,
+    annualRevenue,
+    employeeCount,
+    manufacturing,
+    businessChallenges,
   } = user;
   const today = new Date();
   const status = endDate < today ? "EXPIRED" : rawStatus;
   const isActive = status === "ACTIVE";
+  const profileAvailable =
+    !!businessName &&
+    !!companyAddress &&
+    annualRevenue !== null &&
+    employeeCount !== null &&
+    manufacturing !== null &&
+    businessChallenges.length > 0;
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [credOpen, setCredOpen] = useState(false);
@@ -86,13 +99,19 @@ export default function UserCard({ user }) {
           </button>
           {menuOpen && (
             <div className="absolute right-0 mt-2 w-32 rounded-md border bg-popover text-popover-foreground shadow-md">
-              <Link
-                href={`/admin/users/${id}`}
-                className="block px-4 py-2 text-sm hover:bg-muted"
-                onClick={() => setMenuOpen(false)}
-              >
-                View Profile
-              </Link>
+              {profileAvailable ? (
+                <Link
+                  href={`/admin/users/${id}`}
+                  className="block px-4 py-2 text-sm hover:bg-muted"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  View Profile
+                </Link>
+              ) : (
+                <span className="block px-4 py-2 text-sm opacity-50">
+                  View Profile
+                </span>
+              )}
             </div>
           )}
         </div>

@@ -18,6 +18,7 @@ export default function OnboardingForm({ user, action }) {
   const [step, setStep] = useState(1);
   const [challenges, setChallenges] = useState([""]);
   const [imageError, setImageError] = useState("");
+  const [useExistingPassword, setUseExistingPassword] = useState(true);
 
   const MAX_IMAGE_SIZE = 4 * 1024 * 1024; // 4MB
 
@@ -175,7 +176,47 @@ export default function OnboardingForm({ user, action }) {
           </div>
         </CardContent>
       </Card>
-      {step === 3 && (
+      <Card hidden={step !== 3}>
+        <CardHeader>
+          <CardTitle>Step 3</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="radio"
+                checked={useExistingPassword}
+                onChange={() => setUseExistingPassword(true)}
+              />
+              <span>Continue with current password</span>
+            </label>
+          </div>
+          <div className="space-y-2">
+            <label className="flex items-center space-x-2 text-sm">
+              <input
+                type="radio"
+                checked={!useExistingPassword}
+                onChange={() => setUseExistingPassword(false)}
+              />
+              <span>Set new password</span>
+            </label>
+            {!useExistingPassword && (
+              <Input
+                id="password"
+                name="password"
+                type="text"
+                placeholder="Enter new password"
+              />
+            )}
+          </div>
+          <div className="flex justify-end">
+            <Button type="button" onClick={() => setStep(4)}>
+              Next
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      {step === 4 && (
         <div className="flex justify-center pt-4">
           <SubmitButton className="px-8 py-6 text-lg" pendingText="Saving...">
             Get Started
