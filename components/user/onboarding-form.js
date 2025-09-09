@@ -17,6 +17,19 @@ import {
 export default function OnboardingForm({ user, action }) {
   const [step, setStep] = useState(1);
   const [challenges, setChallenges] = useState([""]);
+  const [imageError, setImageError] = useState("");
+
+  const MAX_IMAGE_SIZE = 4 * 1024 * 1024; // 4MB
+
+  function handleImageChange(e) {
+    const file = e.target.files[0];
+    if (file && file.size > MAX_IMAGE_SIZE) {
+      setImageError("Image size must be less than 4MB.");
+      e.target.value = "";
+    } else {
+      setImageError("");
+    }
+  }
 
   function addChallenge() {
     if (challenges.length < 3) {
@@ -71,7 +84,16 @@ export default function OnboardingForm({ user, action }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="image">Profile Image</Label>
-              <Input id="image" name="image" type="file" accept="image/*" />
+              <Input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {imageError && (
+                <p className="text-sm text-red-600">{imageError}</p>
+              )}
             </div>
           <div className="flex justify-end">
             <Button type="button" onClick={() => setStep(2)}>
