@@ -14,7 +14,8 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Eye, Download, Menu, X, MoreVertical } from "lucide-react";
+import { Eye, Download, Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function UserShell({ user, modules, tutorials, logout }) {
   const [view, setView] = useState("modules");
@@ -57,9 +58,21 @@ export default function UserShell({ user, modules, tutorials, logout }) {
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded hover:bg-muted"
+              className="rounded-full focus:outline-none"
             >
-              <MoreVertical className="h-5 w-5" />
+              {user.imageUrl ? (
+                <Image
+                  src={user.imageUrl}
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-full object-cover"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                  {user.name.charAt(0)}
+                </div>
+              )}
               <span className="sr-only">Open menu</span>
             </button>
             {menuOpen && (

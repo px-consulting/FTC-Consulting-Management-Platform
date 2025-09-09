@@ -1,4 +1,5 @@
 import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function UserProfile({ user }) {
   const {
@@ -16,10 +17,12 @@ export default function UserProfile({ user }) {
     businessChallenges,
   } = user;
   return (
-    <div className="max-w-3xl mx-auto space-y-8">
-      <div className="grid gap-6 md:grid-cols-2">
-        <section className="space-y-4 border rounded p-4">
-          <h2 className="text-lg font-medium">User Info</h2>
+    <div className="max-w-3xl mx-auto space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>User Info</CardTitle>
+        </CardHeader>
+        <CardContent>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
               <dt className="font-medium">Name</dt>
@@ -48,9 +51,13 @@ export default function UserProfile({ user }) {
               <dd>{endDate}</dd>
             </div>
           </dl>
-        </section>
-        <section className="space-y-4 border rounded p-4">
-          <h2 className="text-lg font-medium">Business Info</h2>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Business Info</CardTitle>
+        </CardHeader>
+        <CardContent>
           <dl className="space-y-2 text-sm">
             {businessName && (
               <div className="flex justify-between">
@@ -95,8 +102,8 @@ export default function UserProfile({ user }) {
               </div>
             )}
           </dl>
-        </section>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
