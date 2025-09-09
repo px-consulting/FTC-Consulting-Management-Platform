@@ -34,7 +34,10 @@ model User {
   imageUrl      String?
   businessName  String?
   companyAddress String?
+  annualRevenue Int?
   employeeCount Int?
+  manufacturing Boolean?
+  businessChallenges String[] @default([])
   status        String      @default("CREATED")
   lastLogin     DateTime?
   createdAt     DateTime    @default(now())

@@ -71,6 +71,12 @@ export default function AddUserDialog() {
             />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="user-business">
+              Business Name <span className="text-red-500">*</span>
+            </Label>
+            <Input id="user-business" name="businessName" placeholder="Enter business name" required />
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="user-membership">
               Membership Taken <span className="text-red-500">*</span>
             </Label>

@@ -9,7 +9,14 @@ export default async function UserPage() {
   const id = Number(userIdCookie.value);
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user) redirect("/");
-  if (!user.businessName || !user.companyAddress || user.employeeCount === null) {
+  if (
+    !user.businessName ||
+    !user.companyAddress ||
+    user.annualRevenue === null ||
+    user.employeeCount === null ||
+    user.manufacturing === null ||
+    user.businessChallenges.length === 0
+  ) {
     redirect("/user/onboarding");
   }
   const modules = await prisma.learningModule.findMany({
