@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useActionState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "@/components/ui/submit-button";
@@ -17,7 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Key, Trash, X } from "lucide-react";
+import { Key, Trash, X, MoreVertical } from "lucide-react";
 import { setUserActive, deleteUser, updateCredentials } from "@/lib/users";
 
 export default function UserCard({ user }) {
@@ -37,6 +38,7 @@ export default function UserCard({ user }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [credOpen, setCredOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const initialCredState = { success: false };
   async function handleUpdate(prevState, formData) {
     await updateCredentials(id, formData);
@@ -68,111 +70,134 @@ export default function UserCard({ user }) {
 
   return (
     <Card className="p-4">
-      <div className="flex flex-col gap-4">
+      <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <h3 className="font-medium">{name}</h3>
           <p className="text-sm text-muted-foreground">{email}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <p className="text-sm text-muted-foreground">{membership}</p>
-          <p className="text-sm text-muted-foreground">
-            Ends {endDate.toISOString().split("T")[0]}
-          </p>
-          <Badge variant={status.toLowerCase()}>{status}</Badge>
-          <div className="flex items-center gap-2">
-            <Switch
-              id={`user-${id}`}
-              checked={isActive}
-              onCheckedChange={() => setConfirmOpen(true)}
-            />
-            <Label htmlFor={`user-${id}`}>
-              {status === "ACTIVE" ? "Active" : status === "EXPIRED" ? "Expired" : "Inactive"}
-            </Label>
-          </div>
-          <Dialog
-            open={credOpen}
-            onOpenChange={(o) => {
-              setCredOpen(o);
-              if (!o) setEditing(false);
-            }}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 rounded hover:bg-muted"
           >
-            <DialogTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Key className="h-4 w-4" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="rounded-lg sm:max-w-sm">
-              <DialogHeader className="flex flex-row items-center justify-between">
-                <DialogTitle>Credentials</DialogTitle>
-                <DialogClose className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Close</span>
-                </DialogClose>
-              </DialogHeader>
-              {editing ? (
-                <form action={credAction} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor={`email-${id}`}>Email</Label>
-                    <Input
-                      id={`email-${id}`}
-                      name="email"
-                      type="email"
-                      defaultValue={email}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`password-${id}`}>Password</Label>
-                    <Input
-                      id={`password-${id}`}
-                      name="password"
-                      defaultValue={passwordPlain}
-                    />
-                  </div>
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() => setEditing(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <SubmitButton type="submit" pendingText="Saving...">
-                      Save
-                    </SubmitButton>
-                  </div>
-                </form>
-              ) : (
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm font-medium">Email</p>
-                    <p className="text-sm text-muted-foreground">{email}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Password</p>
-                    <p className="text-sm text-muted-foreground">{passwordPlain}</p>
-                  </div>
-                  <div className="flex justify-end">
-                    <Button onClick={() => setEditing(true)}>
-                      Update Credentials
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </DialogContent>
-          </Dialog>
-          <form action={deleteUser.bind(null, id)}>
-            <SubmitButton
-              type="submit"
-              variant="ghost"
-              size="icon"
-              className="text-destructive"
-              pendingText="Deleting..."
-            >
-              <Trash className="h-4 w-4" />
-              <span className="sr-only">Delete</span>
-            </SubmitButton>
-          </form>
+            <MoreVertical className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 mt-2 w-32 rounded-md border bg-popover text-popover-foreground shadow-md">
+              <Link
+                href={`/admin/users/${id}`}
+                className="block px-4 py-2 text-sm hover:bg-muted"
+                onClick={() => setMenuOpen(false)}
+              >
+                View Profile
+              </Link>
+            </div>
+          )}
         </div>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center gap-4">
+        {membership && (
+          <p className="text-sm text-muted-foreground">{membership}</p>
+        )}
+        <p className="text-sm text-muted-foreground">
+          Ends {endDate.toISOString().split("T")[0]}
+        </p>
+        <Badge variant={status.toLowerCase()}>{status}</Badge>
+        <div className="flex items-center gap-2">
+          <Switch
+            id={`user-${id}`}
+            checked={isActive}
+            onCheckedChange={() => setConfirmOpen(true)}
+          />
+          <Label htmlFor={`user-${id}`}>
+            {status === "ACTIVE" ? "Active" : status === "EXPIRED" ? "Expired" : "Inactive"}
+          </Label>
+        </div>
+        <Dialog
+          open={credOpen}
+          onOpenChange={(o) => {
+            setCredOpen(o);
+            if (!o) setEditing(false);
+          }}
+        >
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Key className="h-4 w-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="rounded-lg sm:max-w-sm">
+            <DialogHeader className="flex flex-row items-center justify-between">
+              <DialogTitle>Credentials</DialogTitle>
+              <DialogClose className="rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </DialogClose>
+            </DialogHeader>
+            {editing ? (
+              <form action={credAction} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor={`email-${id}`}>Email</Label>
+                  <Input
+                    id={`email-${id}`}
+                    name="email"
+                    type="email"
+                    defaultValue={email}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`password-${id}`}>Password</Label>
+                  <Input
+                    id={`password-${id}`}
+                    name="password"
+                    defaultValue={passwordPlain}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setEditing(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <SubmitButton type="submit" pendingText="Saving...">
+                    Save
+                  </SubmitButton>
+                </div>
+              </form>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium">Email</p>
+                  <p className="text-sm text-muted-foreground">{email}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Password</p>
+                  <p className="text-sm text-muted-foreground">{passwordPlain}</p>
+                </div>
+                <div className="flex justify-end">
+                  <Button onClick={() => setEditing(true)}>
+                    Update Credentials
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+        <form action={deleteUser.bind(null, id)}>
+          <SubmitButton
+            type="submit"
+            variant="ghost"
+            size="icon"
+            className="text-destructive"
+            pendingText="Deleting..."
+          >
+            <Trash className="h-4 w-4" />
+            <span className="sr-only">Delete</span>
+          </SubmitButton>
+        </form>
       </div>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent

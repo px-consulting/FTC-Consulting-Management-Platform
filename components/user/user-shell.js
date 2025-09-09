@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import { Eye, Download, Menu, X, MoreVertical } from "lucide-react";
 export default function UserShell({ user, modules, tutorials, logout }) {
   const [view, setView] = useState("modules");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const profileAvailable =
     !!user.businessName &&
     !!user.companyAddress &&
@@ -64,17 +64,19 @@ export default function UserShell({ user, modules, tutorials, logout }) {
             </button>
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-40 rounded-md border bg-popover text-popover-foreground shadow-md">
-                <button
-                  type="button"
-                  className="block w-full px-4 py-2 text-left text-sm hover:bg-muted disabled:opacity-50"
-                  onClick={() => {
-                    setProfileOpen(true);
-                    setMenuOpen(false);
-                  }}
-                  disabled={!profileAvailable}
-                >
-                  View Profile
-                </button>
+                {profileAvailable ? (
+                  <Link
+                    href="/user/profile"
+                    className="block w-full px-4 py-2 text-left text-sm hover:bg-muted"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    View Profile
+                  </Link>
+                ) : (
+                  <span className="block w-full px-4 py-2 text-left text-sm opacity-50">
+                    View Profile
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -144,59 +146,6 @@ export default function UserShell({ user, modules, tutorials, logout }) {
           </div>
         )}
       </div>
-      <Dialog open={profileOpen} onOpenChange={setProfileOpen}>
-        <DialogContent className="rounded-lg">
-          <DialogHeader className="flex flex-row items-center justify-between">
-            <DialogTitle>Profile</DialogTitle>
-            <DialogClose className="cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-          </DialogHeader>
-          <div className="space-y-4 text-sm">
-            <div className="space-y-1 border rounded p-4">
-              <h3 className="font-medium mb-2">User Info</h3>
-              <p><span className="font-medium">Name:</span> {user.name}</p>
-              <p><span className="font-medium">Email:</span> {user.email}</p>
-              <p><span className="font-medium">Phone:</span> {user.phone}</p>
-              <p><span className="font-medium">Membership:</span> {user.membership}</p>
-              <p><span className="font-medium">Start Date:</span> {user.startDate}</p>
-              <p><span className="font-medium">End Date:</span> {user.endDate}</p>
-            </div>
-            <div className="space-y-1 border rounded p-4">
-              <h3 className="font-medium mb-2">Business Info</h3>
-              {user.businessName && (
-                <p><span className="font-medium">Business Name:</span> {user.businessName}</p>
-              )}
-              {user.companyAddress && (
-                <p><span className="font-medium">Company Address:</span> {user.companyAddress}</p>
-              )}
-              {user.annualRevenue !== null && (
-                <p><span className="font-medium">Annual Revenue:</span> {user.annualRevenue}</p>
-              )}
-              {user.employeeCount !== null && (
-                <p><span className="font-medium">Employee Headcount:</span> {user.employeeCount}</p>
-              )}
-              {user.manufacturing !== null && (
-                <p>
-                  <span className="font-medium">Manufacturing:</span> {" "}
-                  {user.manufacturing ? "Yes" : "No"}
-                </p>
-              )}
-              {user.businessChallenges.length > 0 && (
-                <div>
-                  <span className="font-medium">Business Challenges:</span>
-                  <ul className="list-disc ml-5">
-                    {user.businessChallenges.map((c, i) => (
-                      <li key={i}>{c}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
