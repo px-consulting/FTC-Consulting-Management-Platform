@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { ensureFirstLevelChecklist, getChecklist } from "@/lib/checklists";
+import { ensureChecklists, getChecklist } from "@/lib/checklists";
 import UserProfile from "@/components/user-profile";
 
 export default async function AdminUserProfilePage({ params }) {
@@ -9,7 +9,7 @@ export default async function AdminUserProfilePage({ params }) {
   if (!user) {
     return <div className="p-4">User not found</div>;
   }
-  await ensureFirstLevelChecklist(user);
+  await ensureChecklists(user);
   const checklist = await getChecklist(id);
   const formattedUser = {
     ...user,
