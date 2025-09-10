@@ -2,6 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { ensureFirstLevelChecklist, getChecklist } from "@/lib/checklists";
 import UserProfile from "@/components/user-profile";
 
 export default async function UserProfilePage() {
@@ -10,6 +11,8 @@ export default async function UserProfilePage() {
   const id = Number(userIdCookie.value);
   const user = await prisma.user.findUnique({ where: { id } });
   if (!user) redirect("/");
+  await ensureFirstLevelChecklist(user);
+  const checklist = await getChecklist(id);
   const formattedUser = {
     ...user,
     startDate: user.startDate.toISOString().split("T")[0],
@@ -20,7 +23,7 @@ export default async function UserProfilePage() {
       <Link href="/user" className="text-sm text-muted-foreground hover:underline">
         &larr; Back
       </Link>
-      <UserProfile user={formattedUser} />
+      <UserProfile user={formattedUser} checklist={checklist} />
     </div>
   );
 }
