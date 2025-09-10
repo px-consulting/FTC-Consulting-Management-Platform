@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { submitOnboarding } from "@/app/user/onboarding/actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function OnboardingForm({ user, action }) {
+export default function OnboardingForm({ user }) {
   const [step, setStep] = useState(1);
   const [challenges, setChallenges] = useState([""]);
   const [imageError, setImageError] = useState("");
@@ -45,7 +46,7 @@ export default function OnboardingForm({ user, action }) {
   }
 
   return (
-    <form action={action} className="space-y-6" encType="multipart/form-data">
+    <form action={submitOnboarding} className="space-y-6" encType="multipart/form-data">
       <Card hidden={step !== 1}>
         <CardHeader>
           <CardTitle>Step 1</CardTitle>
