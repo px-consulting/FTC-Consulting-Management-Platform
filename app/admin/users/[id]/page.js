@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { ensureFirstLevelChecklist, getChecklist } from "@/lib/checklists";
 import UserProfile from "@/components/user-profile";
 
 export default async function AdminUserProfilePage({ params }) {
@@ -8,6 +9,8 @@ export default async function AdminUserProfilePage({ params }) {
   if (!user) {
     return <div className="p-4">User not found</div>;
   }
+  await ensureFirstLevelChecklist(user);
+  const checklist = await getChecklist(id);
   const formattedUser = {
     ...user,
     startDate: user.startDate.toISOString().split("T")[0],
@@ -18,7 +21,7 @@ export default async function AdminUserProfilePage({ params }) {
       <Link href="/admin" className="text-sm text-muted-foreground hover:underline">
         &larr; Back
       </Link>
-      <UserProfile user={formattedUser} />
+      <UserProfile user={formattedUser} checklist={checklist} isAdmin />
     </div>
   );
 }

@@ -49,6 +49,7 @@ export default function UserCard({ user }) {
     manufacturing !== null &&
     businessChallenges.length > 0;
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [credOpen, setCredOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -205,18 +206,16 @@ export default function UserCard({ user }) {
             )}
           </DialogContent>
         </Dialog>
-        <form action={deleteUser.bind(null, id)}>
-          <SubmitButton
-            type="submit"
-            variant="ghost"
-            size="icon"
-            className="text-destructive"
-            pendingText="Deleting..."
-          >
-            <Trash className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
-          </SubmitButton>
-        </form>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="text-destructive"
+          onClick={() => setDeleteOpen(true)}
+        >
+          <Trash className="h-4 w-4" />
+          <span className="sr-only">Delete</span>
+        </Button>
       </div>
       <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <DialogContent
@@ -235,6 +234,35 @@ export default function UserCard({ user }) {
               </Button>
             </DialogClose>
             <Button onClick={handleToggle}>Confirm</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <DialogContent
+          className="rounded-lg"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <DialogHeader>
+            <DialogTitle>Delete user?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            This action cannot be undone. This will permanently delete the user
+            and their records.
+          </p>
+          <div className="flex justify-end gap-2">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Cancel
+              </Button>
+            </DialogClose>
+            <form action={deleteUser.bind(null, id)}>
+              <SubmitButton
+                variant="destructive"
+                pendingText="Deleting..."
+              >
+                Delete
+              </SubmitButton>
+            </form>
           </div>
         </DialogContent>
       </Dialog>
