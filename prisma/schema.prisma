@@ -9,8 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -28,26 +28,27 @@ enum ActivityStatus {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  name          String
-  email         String      @unique
-  password      String
-  passwordPlain String?
-  membership    Membership
-  startDate     DateTime
-  endDate       DateTime
-  phone         String?
-  imageUrl      String?
-  businessName  String?
-  companyAddress String?
-  annualRevenue Int?
-  employeeCount Int?
-  manufacturing Boolean?
-  businessChallenges String[] @default([])
-  status        String      @default("CREATED")
-  lastLogin     DateTime?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id                 Int             @id @default(autoincrement())
+  name               String
+  email              String          @unique
+  password           String
+  passwordPlain      String?
+  membership         Membership
+  startDate          DateTime
+  endDate            DateTime
+  phone              String?
+  imageUrl           String?
+  businessName       String?
+  companyAddress     String?
+  annualRevenue      Int?
+  employeeCount      Int?
+  manufacturing      Boolean?
+  businessChallenges String[]        @default([])
+  status             String          @default("CREATED")
+  lastLogin          DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  checklistItems     ChecklistItem[]
 }
 
 model LearningModule {
