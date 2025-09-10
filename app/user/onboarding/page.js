@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { completeOnboarding } from "@/lib/users";
 import OnboardingForm from "@/components/user/onboarding-form";
 
 export default async function OnboardingPage() {
@@ -21,12 +20,6 @@ export default async function OnboardingPage() {
     redirect("/user");
   }
 
-  async function handleSubmit(formData) {
-    "use server";
-    await completeOnboarding(id, formData);
-    redirect("/user");
-  }
-
   const formattedUser = {
     ...user,
     startDate: user.startDate.toISOString().split("T")[0],
@@ -35,7 +28,7 @@ export default async function OnboardingPage() {
   return (
     <div className="max-w-xl mx-auto p-4 space-y-4">
       <h1 className="text-2xl font-heading font-bold text-center">Onboarding</h1>
-      <OnboardingForm user={formattedUser} action={handleSubmit} />
+      <OnboardingForm user={formattedUser} />
     </div>
   );
 }
