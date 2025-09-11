@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
@@ -166,6 +167,9 @@ export default function Assessment({ user }) {
   if (report) {
     return (
       <div className="space-y-4">
+        <Button asChild variant="secondary">
+          <Link href="/user">Back to Dashboard</Link>
+        </Button>
         <h1 className="text-2xl font-bold">360 Business Maturity Assessment</h1>
         <p className="text-sm">{credits}/5 Report Credits remaining</p>
         <Card className="p-4 text-center space-y-4">
@@ -178,6 +182,9 @@ export default function Assessment({ user }) {
 
   return (
     <div className="space-y-4">
+      <Button asChild variant="secondary">
+        <Link href="/user">Back to Dashboard</Link>
+      </Button>
       <h1 className="text-2xl font-bold">360 Business Maturity Assessment</h1>
       <p className="text-sm">{credits}/5 Report Credits remaining</p>
       <h2 className="text-xl font-semibold">
