@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
@@ -126,30 +127,64 @@ export default function Assessment({ user }) {
             reader.readAsDataURL(b);
           })
       );
+
     doc.addImage(imgData, "PNG", 10, 10, 30, 15);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
     doc.text("PX Consulting", 45, 20);
     doc.text(new Date().toLocaleString(), 10, 30);
     doc.text("About Business Owner:", 10, 40);
     doc.text(user.name, 10, 47);
     doc.text("About Business:", 10, 57);
     doc.text(`${user.businessName || ""} - ${user.companyAddress || ""}`, 10, 64);
-    doc.text(report, 10, 74, { maxWidth: 180 });
+
+    let y = 74;
+    const lineHeight = 6;
+    const pageHeight = doc.internal.pageSize.height - 10;
+
+    report.split("\n").forEach((line) => {
+      const isHeading = line.startsWith("**") && line.endsWith("**");
+      const text = line.replace(/\*\*/g, "").trim();
+      doc.setFont("helvetica", isHeading ? "bold" : "normal");
+      doc.setFontSize(isHeading ? 14 : 12);
+      const lines = doc.splitTextToSize(text, 180);
+      lines.forEach((l) => {
+        if (y + lineHeight > pageHeight) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(l, 10, y);
+        y += lineHeight;
+      });
+      if (isHeading) {
+        y += 2;
+      }
+    });
+
     doc.save("business-maturity-report.pdf");
   }
 
   if (report) {
     return (
       <div className="space-y-4">
+        <Button asChild variant="secondary">
+          <Link href="/user">Back to Dashboard</Link>
+        </Button>
         <h1 className="text-2xl font-bold">360 Business Maturity Assessment</h1>
         <p className="text-sm">{credits}/5 Report Credits remaining</p>
-        <Card className="p-4 whitespace-pre-wrap">{report}</Card>
-        <Button onClick={downloadPdf}>Download PDF</Button>
+        <Card className="p-4 text-center space-y-4">
+          <p>Your Maturity Report Is Ready</p>
+          <Button onClick={downloadPdf}>Download Report PDF</Button>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
+      <Button asChild variant="secondary">
+        <Link href="/user">Back to Dashboard</Link>
+      </Button>
       <h1 className="text-2xl font-bold">360 Business Maturity Assessment</h1>
       <p className="text-sm">{credits}/5 Report Credits remaining</p>
       <h2 className="text-xl font-semibold">
