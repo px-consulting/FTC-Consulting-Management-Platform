@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import UserShell from "@/components/user/user-shell";
+import { formatDate } from "@/lib/utils";
 
 export default async function UserPage() {
   const userIdCookie = cookies().get("userId");
@@ -31,8 +32,8 @@ export default async function UserPage() {
   });
   const formattedUser = {
     ...user,
-    startDate: user.startDate.toISOString().split("T")[0],
-    endDate: user.endDate.toISOString().split("T")[0],
+    startDate: formatDate(user.startDate),
+    endDate: formatDate(user.endDate),
   };
   async function logout() {
     "use server";
