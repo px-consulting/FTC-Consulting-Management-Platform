@@ -152,11 +152,13 @@ export default function Assessment({ user }) {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">360 Business Maturity Assessment</h1>
       <p className="text-sm">{credits}/5 Report Credits remaining</p>
-      <h2 className="text-xl font-semibold">{current.title}</h2>
+      <h2 className="text-xl font-semibold">
+        {`Section ${step + 1} of ${sections.length}: ${current.title}`}
+      </h2>
       <div className="space-y-4">
-        {current.questions.map((q) => (
+        {current.questions.map((q, idx) => (
           <Card key={q} className="p-4 space-y-2">
-            <p>{q}</p>
+            <p>{`${idx + 1}. ${q}`}</p>
             <div className="flex flex-col gap-1">
               {options.map((o) => (
                 <label key={o} className="flex items-center gap-2">

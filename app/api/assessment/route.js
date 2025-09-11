@@ -38,20 +38,24 @@ export async function POST(req) {
   let report = "";
   try {
     const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY not configured");
+    }
     const resp = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
         }),
       }
     );
     const data = await resp.json();
-    report =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Report generation failed.";
+    report = resp.ok
+      ? data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "Report generation failed."
+      : data?.error?.message || "Report generation failed.";
   } catch (e) {
     report = "Report generation failed.";
   }
