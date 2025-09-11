@@ -44,6 +44,7 @@ model User {
   employeeCount      Int?
   manufacturing      Boolean?
   businessChallenges String[]        @default([])
+  assessmentCredits  Int             @default(5)
   status             String          @default("CREATED")
   lastLogin          DateTime?
   createdAt          DateTime        @default(now())
