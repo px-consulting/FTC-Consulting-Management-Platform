@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ensureChecklists, getChecklist } from "@/lib/checklists";
 import UserProfile from "@/components/user-profile";
+import { formatDate } from "@/lib/utils";
 
 export default async function UserProfilePage() {
   const userIdCookie = cookies().get("userId");
@@ -15,8 +16,8 @@ export default async function UserProfilePage() {
   const checklist = await getChecklist(id);
   const formattedUser = {
     ...user,
-    startDate: user.startDate.toISOString().split("T")[0],
-    endDate: user.endDate.toISOString().split("T")[0],
+    startDate: formatDate(user.startDate),
+    endDate: formatDate(user.endDate),
   };
   return (
     <div className="p-4 space-y-6">

@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Key, Trash, X, MoreVertical } from "lucide-react";
 import { setUserActive, deleteUser, updateCredentials } from "@/lib/users";
+import { formatDate } from "@/lib/utils";
 
 export default function UserCard({ user }) {
   const {
@@ -122,7 +123,7 @@ export default function UserCard({ user }) {
           <p className="text-sm text-muted-foreground">{membership}</p>
         )}
         <p className="text-sm text-muted-foreground">
-          Ends {endDate.toISOString().split("T")[0]}
+          Ends {formatDate(endDate)}
         </p>
         <Badge variant={status.toLowerCase()}>{status}</Badge>
         <div className="flex items-center gap-2">

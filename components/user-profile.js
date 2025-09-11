@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { updateChecklistItem } from "@/lib/checklists";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 export default function UserProfile({ user, checklist = [], isAdmin = false }) {
   const {
@@ -153,9 +154,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                               <input
                                 type="date"
                                 name="deadline"
-                                defaultValue={item.deadline
-                                  .toISOString()
-                                  .split("T")[0]}
+                                defaultValue={formatDate(item.deadline)}
                                 className="border rounded px-2 py-1 text-xs"
                               />
                             </div>
@@ -191,7 +190,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                           </form>
                         ) : (
                           <div className="mt-2 space-y-1">
-                            <p>Deadline: {item.deadline.toISOString().split("T")[0]}</p>
+                            <p>Deadline: {formatDate(item.deadline)}</p>
                             <Badge variant={item.status.toLowerCase()}>
                               {statusLabels[item.status]}
                             </Badge>
@@ -200,11 +199,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                         )}
                         {item.updatedBy && item.updatedAt && (
                           <p className="text-xs text-muted-foreground mt-1">
-                            Updated by {item.updatedBy} at{" "}
-                            {item.updatedAt
-                              .toISOString()
-                              .replace("T", " ")
-                              .slice(0, 16)}
+                            Updated by {item.updatedBy} at {formatDateTime(item.updatedAt)}
                           </p>
                         )}
                       </li>

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import OnboardingForm from "@/components/user/onboarding-form";
+import { formatDate } from "@/lib/utils";
 
 export default async function OnboardingPage() {
   const userIdCookie = cookies().get("userId");
@@ -22,8 +23,8 @@ export default async function OnboardingPage() {
 
   const formattedUser = {
     ...user,
-    startDate: user.startDate.toISOString().split("T")[0],
-    endDate: user.endDate.toISOString().split("T")[0],
+    startDate: formatDate(user.startDate),
+    endDate: formatDate(user.endDate),
   };
   return (
     <div className="max-w-xl mx-auto p-4 space-y-4">
