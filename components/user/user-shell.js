@@ -76,7 +76,7 @@ export default function UserShell({ user, modules, tutorials, logout }) {
               <span className="sr-only">Open menu</span>
             </button>
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-40 rounded-md border bg-popover text-popover-foreground shadow-md">
+              <div className="absolute right-0 mt-2 w-48 rounded-md border bg-popover text-popover-foreground shadow-md">
                 {profileAvailable ? (
                   <Link
                     href="/user/profile"
@@ -90,6 +90,13 @@ export default function UserShell({ user, modules, tutorials, logout }) {
                     View Profile
                   </span>
                 )}
+                <Link
+                  href="/user/assessment"
+                  className="block w-full px-4 py-2 text-left text-sm hover:bg-muted"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  360 Business Maturity
+                </Link>
               </div>
             )}
           </div>

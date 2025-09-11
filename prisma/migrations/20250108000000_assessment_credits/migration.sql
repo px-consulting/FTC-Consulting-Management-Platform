@@ -1,0 +1,1 @@
+ALTER TABLE "User" ADD COLUMN "assessmentCredits" INTEGER NOT NULL DEFAULT 5;
