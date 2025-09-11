@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 export async function POST(req) {
   const userIdCookie = cookies().get("userId");
@@ -37,25 +41,11 @@ export async function POST(req) {
 
   let report = "";
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
+    if (!process.env.GEMINI_API_KEY) {
       throw new Error("GEMINI_API_KEY not configured");
     }
-    const resp = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: prompt }] }],
-        }),
-      }
-    );
-    const data = await resp.json();
-    report = resp.ok
-      ? data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Report generation failed."
-      : data?.error?.message || "Report generation failed.";
+    const result = await model.generateContent(prompt);
+    report = result?.response?.text()?.trim() || "Report generation failed.";
   } catch (e) {
     report = "Report generation failed.";
   }
