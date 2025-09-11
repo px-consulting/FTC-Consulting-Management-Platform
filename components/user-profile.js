@@ -156,6 +156,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                                 name="deadline"
                                 defaultValue={formatDate(item.deadline)}
                                 className="border rounded px-2 py-1 text-xs"
+                                key={`deadline-${item.id}-${item.deadline}`}
                               />
                             </div>
                             <div className="flex flex-col">
@@ -166,6 +167,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                                 name="status"
                                 defaultValue={item.status}
                                 className="border rounded px-2 py-1 text-xs"
+                                key={`status-${item.id}-${item.status}`}
                               >
                                 <option value="NOT_STARTED">Not started</option>
                                 <option value="IN_PROGRESS">In Progress</option>
@@ -180,6 +182,7 @@ export default function UserProfile({ user, checklist = [], isAdmin = false }) {
                                 name="remarks"
                                 defaultValue={item.remarks}
                                 className="h-8 text-xs"
+                                key={`remarks-${item.id}-${item.remarks}`}
                               />
                             </div>
                             <div className="flex justify-end">
